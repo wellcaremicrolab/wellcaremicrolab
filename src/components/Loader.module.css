@@ -1,0 +1,321 @@
+.loaderOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #ffffff;
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  perspective: 1500px;
+}
+
+/* Flight to Navbar Transition */
+.outroFadeOut {
+  animation: bgFadeToHomepage 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes bgFadeToHomepage {
+  0% { background-color: rgba(255, 255, 255, 1); }
+  100% { background-color: rgba(255, 255, 255, 0); pointer-events: none; }
+}
+
+/* Camera push wrapper */
+.cameraPush {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Very Soft Volumetric Gradients */
+.ambientVolumetricGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1200px;
+  height: 1200px;
+  background: radial-gradient(ellipse at 30% 30%, rgba(79, 142, 219, 0.04) 0%, transparent 40%),
+              radial-gradient(ellipse at 70% 70%, rgba(114, 198, 61, 0.04) 0%, transparent 40%);
+  filter: blur(60px);
+  z-index: 1;
+  animation: slowAmbientVolumetric 12s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+}
+
+@keyframes slowAmbientVolumetric {
+  0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) scale(1.1) rotate(5deg); }
+}
+
+.premiumBloom {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.6) 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Tiny floating dust particles in background */
+.bgDustSwarm {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.dustParticle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(2.5px);
+  box-shadow: 0 0 10px rgba(255,255,255,0.8);
+}
+
+.contentContainer {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+}
+
+/* Flight to Navbar Morph Outro */
+/* The navbar logo typically sits in the top-left area in the actual layout. */
+.flightToNavbar {
+  animation: logoFlight 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes logoFlight {
+  0% { transform: translateY(0) scale(1); filter: blur(0px); opacity: 1; }
+  20% { transform: translateY(5px) scale(1.05); filter: blur(0px); opacity: 1; }
+  100% { transform: translate(-42vw, -45vh) scale(0.2); filter: blur(0.5px); opacity: 0; }
+}
+
+/* 3D Floating Stage */
+.logoStage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 320px;
+  height: 320px;
+}
+
+/* Perspective wrapper for soft 3D effect */
+.floating3DContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+  animation: cinematic3DFloat 8s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+}
+
+@keyframes cinematic3DFloat {
+  0% { transform: translateY(0px) rotateX(4deg) rotateY(-4deg); }
+  100% { transform: translateY(-12px) rotateX(-2deg) rotateY(6deg); }
+}
+
+.logoWrapper {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  overflow: visible; /* Need overflow visible for energy pulses, will clip sweep carefully */
+  transform-style: preserve-3d;
+}
+
+.logoImageFrame {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden; /* Clips the glass sweep to the logo bounds */
+}
+
+/* Living DNA Wave Animation */
+.livingDNAWave {
+  animation: livingWave 6s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+}
+
+@keyframes livingWave {
+  0% { transform: scale(1) rotateZ(0deg) skew(0deg); }
+  50% { transform: scale(1.02) rotateZ(1.5deg) skew(-1.5deg); }
+  100% { transform: scale(0.98) rotateZ(-1deg) skew(1deg); }
+}
+
+.logoImage {
+  position: relative;
+  z-index: 6;
+  object-fit: contain;
+  /* Premium 3D drop shadow mimicking physical depth */
+  filter: drop-shadow(0 20px 45px rgba(79, 142, 219, 0.25)) drop-shadow(0 5px 15px rgba(114, 198, 61, 0.15));
+}
+
+/* Energy Pulses behind the logo */
+.energyPulseBlue {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140%;
+  height: 140%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79, 142, 219, 0.2) 0%, transparent 60%);
+  z-index: 4;
+  animation: pulseBlueEnergy 4s ease-in-out infinite alternate;
+}
+
+.energyPulseGreen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130%;
+  height: 130%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(114, 198, 61, 0.2) 0%, transparent 60%);
+  z-index: 4;
+  animation: pulseGreenEnergy 5s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes pulseBlueEnergy {
+  0% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.5; }
+  100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+}
+
+@keyframes pulseGreenEnergy {
+  0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+}
+
+/* Polished Glass Light Sweep over Logo */
+.glassHighlightSweep {
+  position: absolute;
+  top: -50%;
+  left: -100%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(35deg);
+  z-index: 10;
+  animation: appleHighlightSweep 3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation-delay: 1s;
+}
+
+@keyframes appleHighlightSweep {
+  0% { left: -100%; opacity: 0; }
+  10% { opacity: 1; }
+  40% { left: 200%; opacity: 0; }
+  100% { left: 200%; opacity: 0; }
+}
+
+/* Particle Swarm for Assembly Sequence */
+.particleSwarm {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+}
+
+/* Cinematic Typography Reveal */
+.typographyFrame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  gap: 25px; /* Spacing between text block and progress bar */
+}
+
+.textStack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px; /* High-end tight spacing */
+}
+
+.brandTitle {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: 5px; /* Luxury appearance */
+  background: linear-gradient(to right, var(--primary-blue), var(--primary-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brandSub {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary-green-hover);
+  letter-spacing: 6px;
+  text-transform: uppercase;
+}
+
+.accreditationText {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+/* Ultra Thin 2px Glowing Loading Line */
+.progressTrack {
+  width: 240px;
+  height: 2px;
+  background-color: rgba(79, 142, 219, 0.06);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-green) 100%);
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(114, 198, 61, 0.7), 0 0 6px rgba(79, 142, 219, 0.9);
+  will-change: width;
+}

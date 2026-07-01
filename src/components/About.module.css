@@ -1,0 +1,269 @@
+.section {
+  position: relative;
+  background-color: var(--bg-pure);
+  padding: 120px 24px;
+  overflow: hidden;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+@media (max-width: 992px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 56px;
+  }
+}
+
+/* Left Column Graphic */
+.graphicCol {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.graphicFrame {
+  width: 100%;
+  max-width: 380px;
+  height: 380px;
+  background: rgba(248, 250, 252, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: var(--glass-shadow) !important;
+  border-radius: 32px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Upgraded SVG Illustration & Animations */
+.labIllustrationSvg {
+  width: 90%;
+  height: 90%;
+  overflow: visible;
+}
+
+@keyframes svg-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes svg-float-reverse {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(8px); }
+}
+
+@keyframes svg-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes bubble-rise {
+  0% { transform: translateY(15px); opacity: 0; }
+  50% { opacity: 0.8; }
+  100% { transform: translateY(-25px); opacity: 0; }
+}
+
+.microscopeIllustration {
+  animation: svg-float 5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.labTubeLeft {
+  animation: svg-float-reverse 6s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.labTubeRight {
+  animation: svg-float 7s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.dnaFloatingStrand {
+  animation: svg-float-reverse 8s ease-in-out infinite;
+}
+
+.floatingMoleculesGroup {
+  animation: svg-float 9s ease-in-out infinite;
+}
+
+.bubbleAnimation1 {
+  animation: bubble-rise 3s ease-in infinite;
+}
+
+.bubbleAnimation2 {
+  animation: bubble-rise 2.5s ease-in infinite;
+  animation-delay: 1s;
+}
+
+.badgeOverlay {
+  position: absolute;
+  right: -24px;
+  bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04) !important;
+  border-radius: 20px !important;
+  z-index: 10;
+}
+
+.badgeTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.badgeDesc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Right Column Text */
+.textCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.tag {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary-green-hover);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 2.75rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+}
+
+.gradientText {
+  background: var(--grad-medical-intense);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.welcomeText {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.bodyText {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 36px;
+}
+
+.visionGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.visionCard {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  border-radius: 18px !important;
+  background: rgba(248, 250, 252, 0.5) !important;
+  border: 1px solid var(--border-light) !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.01) !important;
+  transition: var(--transition-smooth);
+}
+
+.visionCard:hover {
+  background: var(--bg-pure) !important;
+  border-color: rgba(52, 116, 197, 0.15) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+  transform: translateX(4px);
+}
+
+.iconCircle {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(92, 184, 42, 0.1);
+  color: var(--primary-green-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconCircleBlue {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(52, 116, 197, 0.1);
+  color: var(--primary-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cardTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.cardDesc {
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 80px 16px;
+  }
+
+  .title {
+    font-size: 2.25rem;
+  }
+
+  .welcomeText {
+    font-size: 1.1rem;
+  }
+
+  .badgeOverlay {
+    right: 10px;
+    bottom: 20px;
+  }
+}

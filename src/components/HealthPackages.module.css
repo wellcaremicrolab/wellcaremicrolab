@@ -1,0 +1,324 @@
+.section {
+  position: relative;
+  background-color: var(--bg-surface);
+  padding: 120px 24px;
+  overflow: hidden;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 72px auto;
+}
+
+.tag {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 2.75rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+.gradientText {
+  background: var(--grad-medical-intense);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sub {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.pricingGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+@media (max-width: 1200px) {
+  .pricingGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .pricingGrid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+    gap: 40px;
+  }
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 24px;
+  border-radius: 32px !important;
+  background: rgba(255, 255, 255, 0.45) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: var(--glass-shadow) !important;
+  transition: var(--transition-smooth);
+  height: 100%;
+}
+
+.card:hover {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(52, 116, 197, 0.2) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+
+/* Featured / Popular Card Styling */
+.popularCard {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 2px solid var(--primary-green) !important;
+  box-shadow: 0 20px 50px rgba(92, 184, 42, 0.08) !important;
+}
+
+.popularCard:hover {
+  border-color: var(--primary-green) !important;
+  box-shadow: 0 25px 60px rgba(92, 184, 42, 0.12) !important;
+}
+
+.popularBadge {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--bg-pure);
+  padding: 6px 16px;
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.badgeBlue {
+  background: var(--primary-blue) !important;
+  box-shadow: 0 8px 16px rgba(52, 116, 197, 0.2) !important;
+}
+
+.badgeGreen {
+  background: var(--primary-green) !important;
+  box-shadow: 0 8px 16px rgba(92, 184, 42, 0.2) !important;
+}
+
+.badgeIcon {
+  animation: pulse-glow 2s infinite;
+}
+
+/* Card Header */
+.cardHeader {
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.pkgTitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.pkgTagline {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 16px;
+  min-height: 36px;
+}
+
+.priceSection {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.strikePrice {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: line-through;
+  margin-bottom: 2px;
+  opacity: 0.7;
+}
+
+.priceContainer {
+  display: flex;
+  align-items: baseline;
+}
+
+.currency {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-right: 4px;
+}
+
+.price {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.duration {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.parametersBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-surface);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Card Body */
+.cardBody {
+  flex-grow: 1;
+  margin-bottom: 28px;
+}
+
+.featureTitle {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.featuresList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.featureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.checkWrapper {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(52, 116, 197, 0.1);
+  color: var(--primary-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.checkPopular {
+  background: rgba(92, 184, 42, 0.1);
+  color: var(--primary-green-hover);
+}
+
+.featureText {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+/* Card Footer */
+.cardFooter {
+  width: 100%;
+}
+
+.bookButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--bg-pure);
+  color: var(--primary-blue);
+  border: 1px solid rgba(52, 116, 197, 0.2);
+  padding: 12px;
+  border-radius: 12px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.bookButton:hover {
+  background: rgba(52, 116, 197, 0.04);
+  border-color: var(--primary-blue);
+  transform: scale(1.02);
+}
+
+.popularButton {
+  background: var(--grad-medical-intense);
+  color: var(--bg-pure);
+  border: none;
+  box-shadow: 0 8px 24px rgba(92, 184, 42, 0.2);
+}
+
+.popularButton:hover {
+  background: var(--primary-green-hover);
+  box-shadow: 0 12px 30px rgba(92, 184, 42, 0.3);
+  color: var(--bg-pure);
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 80px 16px;
+  }
+
+  .title {
+    font-size: 2.25rem;
+  }
+
+  .card {
+    padding: 32px 20px;
+  }
+}
