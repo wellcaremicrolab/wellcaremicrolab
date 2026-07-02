@@ -82,7 +82,8 @@ export default function ContactMap() {
                 </div>
                 <div>
                   <h4 className={styles.cardTitle}>Laboratory Hours</h4>
-                  <p className={styles.cardText}>Monday - Sunday: 07:00 AM - 09:00 PM</p>
+                  <p className={styles.cardText}>Mon – Sat: 6:00 AM – 8:00 PM</p>
+                  <p className={styles.cardText}>Sunday: 7:00 AM – 2:30 PM</p>
                 </div>
               </div>
             </div>

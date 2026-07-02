@@ -1,227 +1,88 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import styles from "./Loader.module.css";
 
 export default function Loader({ onComplete }) {
-  const [percent, setPercent] = useState(0);
-  const [stage, setStage] = useState("assembling"); // assembling, living, outro
-  const [mounted, setMounted] = useState(false);
+  const [phase, setPhase] = useState(0);
+  // phase 0 = appear, 1 = build ring, 2 = progress, 3 = dissolve
+  const rafRef = useRef(null);
+  const progressRef = useRef(null);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-  
-  // Total loader duration: Strictly 2.8 seconds maximum
-  useEffect(() => {
-    const duration = 2800;
-    const startTime = performance.now();
+    // Phase 0 → 1: Logo appears (200ms)
+    const t1 = setTimeout(() => setPhase(1), 200);
+    // Phase 1 → 2: Ring builds (400ms later = 600ms total)
+    const t2 = setTimeout(() => setPhase(2), 600);
+    // Phase 2 → 3: Start dissolve (900ms later = 1500ms total)
+    const t3 = setTimeout(() => setPhase(3), 1350);
+    // Call onComplete after dissolve finishes (300ms animation)
+    const t4 = setTimeout(() => {
+      if (onComplete) onComplete();
+    }, 1680);
 
-    const updatePercent = (timestamp) => {
-      const elapsed = timestamp - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      const easeProgress = 1 - Math.pow(1 - progress, 3);
-      const current = Math.floor(easeProgress * 100);
-      setPercent(current);
-
-      // Transitions
-      if (elapsed > 1000 && stage === "assembling") {
-        setStage("living");
-      }
-
-      if (progress < 1) {
-        requestAnimationFrame(updatePercent);
-      } else {
-        setPercent(100);
-        setStage("outro");
-        setTimeout(() => {
-          if (onComplete) onComplete();
-        }, 1200); // Wait for flight-to-navbar animation
-      }
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
     };
+  }, [onComplete]);
 
-    requestAnimationFrame(updatePercent);
-  }, [onComplete, stage]);
-
-  // Generate 180 microscopic DOM particles for the rapid cinematic assembly
-  const particles = useMemo(() => {
-    const arr = [];
-    for (let i = 0; i < 180; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const distance = 80 + Math.random() * 500;
-      arr.push({
-        id: i,
-        startX: Math.cos(angle) * distance,
-        startY: Math.sin(angle) * distance,
-        color: i % 2 === 0 ? "rgba(114, 198, 61, 1)" : "rgba(79, 142, 219, 1)",
-        size: Math.random() * 2.5 + 1.5,
-        delay: Math.random() * 0.3,
-      });
-    }
-    return arr;
-  }, []);
+  const ringDots = Array.from({ length: 12 });
 
   return (
-    <div className={`${styles.loaderOverlay} ${stage === "outro" ? styles.outroFadeOut : ""}`}>
-      
-      {/* Cinematic Camera Push-In Wrapper */}
-      <motion.div 
-        className={styles.cameraPush}
-        initial={{ scale: 1.0 }}
-        animate={{ scale: 1.08 }}
-        transition={{ duration: 4.5, ease: "linear" }}
-      >
-        
-        {/* Volumetric Fog & Soft Blooms */}
-        <div className={styles.ambientVolumetricGlow} />
-        <div className={styles.premiumBloom} />
+    <div className={`${styles.overlay} ${phase === 3 ? styles.dissolve : ""}`}>
+      {/* Ambient background glows */}
+      <div className={styles.bgGlow1} />
+      <div className={styles.bgGlow2} />
 
-        {/* Floating dust/particles in background */}
-        {mounted && (
-          <div className={styles.bgDustSwarm}>
-            {particles.slice(0, 20).map((p) => (
-              <motion.div
-                key={`bg-${p.id}`}
-                className={styles.dustParticle}
-                initial={{ x: p.startX, y: p.startY, opacity: 0.15 }}
-                animate={{ 
-                  x: p.startX + (Math.random() * 80 - 40), 
-                  y: p.startY + (Math.random() * 80 - 40), 
-                }}
-                transition={{ duration: 4, ease: "linear", repeat: Infinity, repeatType: "reverse" }}
-                style={{ width: p.size * 2, height: p.size * 2, backgroundColor: p.color }}
-              />
-            ))}
-          </div>
-        )}
+      {/* Grid lines (subtle medical-tech feel) */}
+      <div className={styles.gridLines} />
 
-        <div className={styles.contentContainer}>
-          
-          {/* Logo Stage Container */}
-          <div className={`${styles.logoStage} ${stage === "outro" ? styles.flightToNavbar : ""}`}>
-            
-            {/* 3D Floating & Shadow Wrapper */}
-            <div className={styles.floating3DContainer}>
-              <div className={styles.logoWrapper}>
-                
-                {/* 40% Larger Living DNA Logo */}
-                <motion.div
-                  initial={{ opacity: 0, filter: "blur(20px)", scale: 0.7 }}
-                  animate={{ 
-                    opacity: stage !== "assembling" ? 1 : 0.05, 
-                    filter: stage !== "assembling" ? "blur(0px)" : "blur(8px)",
-                    scale: stage !== "assembling" ? 1.0 : 0.85 
-                  }}
-                  transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-                  className={`${styles.logoImageFrame} ${stage !== "assembling" ? styles.livingDNAWave : ""}`}
-                >
-                  {/* Energy Pulses (Blue & Green) behind the logo */}
-                  <div className={styles.energyPulseBlue} />
-                  <div className={styles.energyPulseGreen} />
-                  
-                  <Image
-                    src="/logo.png"
-                    alt="Wellcare Micro Lab"
-                    width={220} // 40% larger than 150px
-                    height={220}
-                    className={styles.logoImage}
-                    priority
-                  />
-                  
-                  {/* Cinematic Light Sweep Overlay */}
-                  {stage !== "assembling" && <div className={styles.glassHighlightSweep} />}
-                </motion.div>
-
-                {/* Particle Assembly Swarm */}
-                <AnimatePresence>
-                  {mounted && stage === "assembling" && (
-                    <div className={styles.particleSwarm}>
-                      {particles.map((p) => (
-                        <motion.div
-                          key={p.id}
-                          className={styles.particle}
-                          initial={{ x: p.startX, y: p.startY, opacity: 0, scale: 0 }}
-                          animate={{ x: 0, y: 0, opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0 }}
-                          transition={{ 
-                            duration: 0.8, 
-                            delay: p.delay, 
-                            ease: [0.22, 1, 0.36, 1] 
-                          }}
-                          style={{
-                            width: p.size,
-                            height: p.size,
-                            backgroundColor: p.color,
-                            boxShadow: `0 0 ${p.size * 2}px ${p.color}`,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </AnimatePresence>
-                
-              </div>
-            </div>
-          </div>
-
-          {/* Premium Typography & Loading Bar Frame */}
-          <AnimatePresence>
-            {stage !== "outro" && (
-              <motion.div
-                className={styles.typographyFrame}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0, y: -20, filter: "blur(6px)" }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              >
-                
-                {stage !== "assembling" && (
-                  <div className={styles.textStack}>
-                    <motion.h2 
-                      className={styles.brandTitle}
-                      initial={{ opacity: 0, y: 15, filter: "blur(4px)" }}
-                      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                      transition={{ duration: 0.8 }}
-                    >
-                      WELLCARE MICRO LAB
-                    </motion.h2>
-                    <motion.h3 
-                      className={styles.brandSub}
-                      initial={{ opacity: 0, y: 15, filter: "blur(4px)" }}
-                      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                      transition={{ delay: 0.15, duration: 0.8 }}
-                    >
-                      QUALITY ASSURED LABORATORY
-                    </motion.h3>
-                    <motion.p 
-                      className={styles.accreditationText}
-                      initial={{ opacity: 0, y: 15, filter: "blur(4px)" }}
-                      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                      transition={{ delay: 0.3, duration: 0.8 }}
-                    >
-                      External Quality Assurance By – CMC Vellore
-                    </motion.p>
-                  </div>
-                )}
-
-                {/* Ultra-Thin 2px Premium Loading Line */}
-                <div className={styles.progressTrack}>
-                  <motion.div
-                    className={styles.progressFill}
-                    style={{ width: `${percent}%` }}
-                    transition={{ ease: "linear", duration: 0.1 }}
-                  />
-                </div>
-
-              </motion.div>
-            )}
-          </AnimatePresence>
-
+      <div className={styles.stage}>
+        {/* Particle ring */}
+        <div className={`${styles.ring} ${phase >= 1 ? styles.ringVisible : ""}`}>
+          {ringDots.map((_, i) => (
+            <div
+              key={i}
+              className={styles.ringDot}
+              style={{
+                "--i": i,
+                "--total": ringDots.length,
+                animationDelay: `${i * 60}ms`,
+              }}
+            />
+          ))}
         </div>
-      </motion.div>
+
+        {/* Outer glow halo */}
+        <div className={`${styles.halo} ${phase >= 1 ? styles.haloVisible : ""}`} />
+
+        {/* Logo */}
+        <div className={`${styles.logoWrap} ${phase >= 0 ? styles.logoVisible : ""}`}>
+          <Image
+            src="/logo.png"
+            alt="Wellcare Micro Lab"
+            width={180}
+            height={180}
+            className={styles.logoImg}
+            priority
+          />
+        </div>
+
+        {/* Brand text */}
+        <div className={`${styles.brandText} ${phase >= 1 ? styles.brandTextVisible : ""}`}>
+          <span className={styles.brandName}>WELLCARE</span>
+          <span className={styles.brandSub}>MICRO LAB</span>
+        </div>
+      </div>
+
+      {/* Progress sweep bar */}
+      <div className={`${styles.progressWrap} ${phase >= 2 ? styles.progressVisible : ""}`}>
+        <div className={styles.progressBar} />
+      </div>
     </div>
   );
 }

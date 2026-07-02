@@ -8,6 +8,7 @@ import SpecialTestProfiles from "@/components/SpecialTestProfiles";
 import BookAppointment from "@/components/BookAppointment";
 import ContactMap from "@/components/ContactMap";
 import Footer from "@/components/Footer";
+import FloatingSocials from "@/components/FloatingSocials";
 
 export default function Home() {
   return (
@@ -24,6 +25,7 @@ export default function Home() {
         <ContactMap />
       </main>
       <Footer />
+      <FloatingSocials />
     </>
   );
 }

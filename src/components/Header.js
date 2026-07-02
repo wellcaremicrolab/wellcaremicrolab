@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, PhoneCall } from "lucide-react";
 import Link from "next/link";
@@ -22,27 +22,35 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [navVisible, setNavVisible] = useState(true);
 
+  const lastScrollY = useRef(0);
   const { scrollY } = useScroll();
   const logoRotate = useTransform(scrollY, [0, 2500], [0, 360]);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
+      const currentY = window.scrollY;
+      const delta = currentY - lastScrollY.current;
+
+      // Show/hide on scroll direction
+      if (currentY < 60) {
+        setNavVisible(true);
+      } else if (delta > 8 && !mobileMenuOpen) {
+        setNavVisible(false);
+      } else if (delta < -5) {
+        setNavVisible(true);
       }
+
+      lastScrollY.current = currentY;
+      setScrolled(currentY > 20);
 
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalHeight > 0) {
-        setScrollProgress(window.scrollY / totalHeight);
-      }
+      if (totalHeight > 0) setScrollProgress(currentY / totalHeight);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
-    // Active Section Observer for homepage sections
     const observerOptions = {
       root: null,
       rootMargin: "-20% 0px -60% 0px",
@@ -51,44 +59,41 @@ export default function Header() {
 
     const observerCallback = (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
+        if (entry.isIntersecting) setActiveSection(entry.target.id);
       });
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
     const sections = document.querySelectorAll("section[id]");
-    sections.forEach((section) => observer.observe(section));
+    sections.forEach((s) => observer.observe(s));
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      sections.forEach((section) => observer.unobserve(section));
+      sections.forEach((s) => observer.unobserve(s));
     };
-  }, []);
+  }, [mobileMenuOpen]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileMenuOpen]);
 
   const handleLinkClick = (e, link) => {
-    // If it's a subpage route (starts with /), let Next.js do full redirect navigation
-    if (link.href.startsWith("/")) {
-      setMobileMenuOpen(false);
-      return;
-    }
-
-    // Otherwise, handle hash scroll
-    e.preventDefault();
     setMobileMenuOpen(false);
+    if (link.href.startsWith("/")) return;
 
+    e.preventDefault();
     if (window.location.pathname === "/") {
-      const targetElement = document.querySelector(link.href);
-      if (targetElement) {
-        const headerOffset = scrolled ? 70 : 90;
-        const elementPosition = targetElement.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
+      const target = document.querySelector(link.href);
+      if (target) {
+        const offset = 80;
+        const y = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: y, behavior: "smooth" });
       }
     } else {
       window.location.href = "/" + link.href;
@@ -97,22 +102,20 @@ export default function Header() {
 
   return (
     <>
-      <div 
-        className="scroll-progress-bar" 
+      {/* Scroll progress bar */}
+      <div
+        className="scroll-progress-bar"
         style={{ transform: `scaleX(${scrollProgress})` }}
       />
 
       <header
-        className={`${styles.header} ${scrolled ? styles.scrolled : ""} glass-panel`}
+        className={`${styles.header} ${scrolled ? styles.scrolled : ""} ${!navVisible ? styles.hidden : ""}`}
       >
         <div className={styles.container}>
-          {/* Logo with scroll-linked rotating Image */}
+          {/* Logo */}
           <Link href="/" className={styles.logoLink}>
             <div className={styles.logoContainer}>
-              <motion.div
-                style={{ rotate: logoRotate }}
-                className={styles.logoIcon}
-              >
+              <motion.div style={{ rotate: logoRotate }} className={styles.logoIcon}>
                 <Image
                   src="/logo.png"
                   alt="Wellcare Logo"
@@ -129,22 +132,16 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Nav */}
           <nav className={styles.desktopNav}>
             {navLinks.map((link) => {
               const isHashLink = link.href.startsWith("#");
               const isSubpage = link.href.startsWith("/");
-              
-              // Compute active state based on route or hash
               let isActive = false;
               if (typeof window !== "undefined") {
-                if (isSubpage) {
-                  isActive = window.location.pathname === link.href;
-                } else if (isHashLink) {
-                  isActive = window.location.pathname === "/" && activeSection === link.href.substring(1);
-                }
+                if (isSubpage) isActive = window.location.pathname === link.href;
+                else if (isHashLink) isActive = window.location.pathname === "/" && activeSection === link.href.substring(1);
               }
-
               return (
                 <Link
                   key={link.name}
@@ -165,21 +162,27 @@ export default function Header() {
             })}
           </nav>
 
-          {/* Desktop CTA Call Button */}
+          {/* Desktop CTA */}
           <div className={styles.desktopActions}>
-            <a href="tel:9677437151" className={`${styles.ctaButton} ${styles.glowingCTA}`}>
+            <a href="tel:9677437151" className={styles.ctaButton}>
               <PhoneCall size={16} />
-              <span>Call 96774 37151</span>
+              <span>96774 37151</span>
             </a>
           </div>
 
-          {/* Hamburger button for mobile */}
+          {/* Hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className={styles.mobileMenuToggle}
             aria-label="Toggle Menu"
+            aria-expanded={mobileMenuOpen}
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            <motion.div
+              animate={mobileMenuOpen ? "open" : "closed"}
+              className={styles.hamburgerIcon}
+            >
+              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </motion.div>
           </button>
         </div>
       </header>
@@ -187,33 +190,61 @@ export default function Header() {
       {/* Mobile Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className={`${styles.mobileDrawer} glass-panel`}
-          >
-            <div className={styles.mobileNavContainer}>
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className={styles.backdrop}
+              onClick={() => setMobileMenuOpen(false)}
+            />
+
+            {/* Drawer */}
+            <motion.div
+              key="drawer"
+              initial={{ x: "100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "100%", opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className={styles.mobileDrawer}
+            >
+              {/* Drawer Header */}
+              <div className={styles.drawerHeader}>
+                <div className={styles.drawerLogo}>
+                  <Image src="/logo.png" alt="Wellcare" width={36} height={36} />
+                  <div>
+                    <div className={styles.drawerBrandName}>WELLCARE</div>
+                    <div className={styles.drawerSubBrand}>MICRO LAB</div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={styles.drawerClose}
+                  aria-label="Close menu"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Nav Links */}
               <nav className={styles.mobileNav}>
                 {navLinks.map((link, idx) => {
                   const isHashLink = link.href.startsWith("#");
                   const isSubpage = link.href.startsWith("/");
                   let isActive = false;
                   if (typeof window !== "undefined") {
-                    if (isSubpage) {
-                      isActive = window.location.pathname === link.href;
-                    } else if (isHashLink) {
-                      isActive = window.location.pathname === "/" && activeSection === link.href.substring(1);
-                    }
+                    if (isSubpage) isActive = window.location.pathname === link.href;
+                    else if (isHashLink) isActive = window.location.pathname === "/" && activeSection === link.href.substring(1);
                   }
-
                   return (
                     <motion.div
                       key={link.name}
-                      initial={{ opacity: 0, x: -10 }}
+                      initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: idx * 0.05 }}
+                      transition={{ delay: idx * 0.06, duration: 0.3 }}
                     >
                       <Link
                         href={link.href}
@@ -227,19 +258,20 @@ export default function Header() {
                 })}
               </nav>
 
+              {/* CTA in drawer */}
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className={styles.mobileActions}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35, duration: 0.3 }}
+                className={styles.drawerCta}
               >
-                <a href="tel:9677437151" className={styles.mobileCta}>
+                <a href="tel:9677437151" className={styles.drawerCtaBtn}>
                   <PhoneCall size={18} />
                   <span>Call 96774 37151</span>
                 </a>
               </motion.div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>

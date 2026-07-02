@@ -21,9 +21,9 @@ export const metadata = {
   description: "Wellcare Micro Lab provides accurate, reliable, and timely diagnostic laboratory testing services in Arachalur, Erode. Book blood tests, hormone tests, lipid profiles, and full body checkups with home sample collection.",
   keywords: "Wellcare Micro Lab, diagnostic laboratory, Erode, Arachalur, blood test, home sample collection, medical lab, clinical lab, health packages, full body checkup",
   authors: [{ name: "Wellcare Micro Lab" }],
-  metadataBase: new URL("https://wellcaremicrolab.com"),
+  metadataBase: new URL("https://www.wellcaremicrolab.com"),
   alternates: {
-    canonical: "/",
+    canonical: "https://www.wellcaremicrolab.com/",
   },
   icons: {
     icon: "/logo.png",
@@ -33,7 +33,7 @@ export const metadata = {
   openGraph: {
     title: "Wellcare Micro Lab | Premium Diagnostics in Erode",
     description: "Accurate, reliable, and timely laboratory testing services with modern technology in Arachalur, Erode.",
-    url: "https://wellcaremicrolab.com",
+    url: "https://www.wellcaremicrolab.com",
     siteName: "Wellcare Micro Lab",
     images: [
       {
@@ -58,9 +58,9 @@ const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "MedicalBusiness",
   "name": "Wellcare Micro Lab",
-  "image": "https://wellcaremicrolab.com/logo.png",
-  "@id": "https://wellcaremicrolab.com/#business",
-  "url": "https://wellcaremicrolab.com",
+  "image": "https://www.wellcaremicrolab.com/logo.png",
+  "@id": "https://www.wellcaremicrolab.com/#business",
+  "url": "https://www.wellcaremicrolab.com",
   "telephone": "+919677437151",
   "priceRange": "₹₹",
   "address": {
@@ -76,20 +76,27 @@ const localBusinessSchema = {
     "latitude": 11.159071246149862,
     "longitude": 77.70040957180305
   },
-  "openingHoursSpecification": {
-    "@type": "OpeningHoursSpecification",
-    "dayOfWeek": [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday"
-    ],
-    "opens": "07:00",
-    "closes": "21:00"
-  }
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ],
+      "opens": "06:00",
+      "closes": "20:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Sunday"],
+      "opens": "07:00",
+      "closes": "14:30"
+    }
+  ]
 };
 
 export default function RootLayout({ children }) {

@@ -1,103 +1,97 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, Flame, Award, Heart } from "lucide-react";
+import { Check, Zap, Star, Crown, ArrowRight } from "lucide-react";
 import styles from "./HealthPackages.module.css";
+import Link from "next/link";
 
-const homePackages = [
+const featuredPackages = [
   {
-    title: "The Basic Essentials",
-    price: "₹799",
-    strikePrice: "₹1,131",
-    tagline: "Primary health profile for routine screening",
-    parameters: "39 Tests Included",
-    popular: false,
-    badgeText: "Preventive",
-    color: "var(--primary-blue)",
+    id: "basic",
+    icon: Zap,
+    title: "Basic Health Package",
+    description: "Essential wellness screening for active individuals covering all vital health markers.",
+    originalPrice: 2200,
+    price: 1499,
+    tests: "45+",
+    badge: "Starter",
+    badgeColor: "blue",
     features: [
-      "Complete Blood Count (CBC)",
-      "Diabetic Profile (FBS)",
-      "Cholesterol Screen",
-      "Kidney Function Test",
-      "Liver Function Test",
+      "CBC (Complete Blood Count)",
+      "Fasting Blood Sugar & HbA1c",
+      "Lipid Profile (Cholesterol)",
+      "Liver Function Test (LFT)",
+      "Kidney Function Test (KFT)",
+      "TFT (Thyroid Function)",
+      "Urine Complete Analysis",
     ],
   },
   {
-    title: "Women's Wellness Basic",
-    price: "₹1,499",
-    strikePrice: "₹2,718",
-    tagline: "Essential testing parameters for women",
-    parameters: "35 Tests Included",
-    popular: false,
-    badgeText: "Women's Care",
-    color: "var(--primary-blue)",
-    features: [
-      "Complete Blood Count (CBC)",
-      "Thyroid Profile",
-      "Vitamin D Level",
-      "Serum Calcium",
-      "Fasting Blood Sugar",
-      "ESR",
-      "Iron Deficiency Profile",
-    ],
-  },
-  {
-    title: "Women's Wellness Plus",
-    price: "₹2,799",
-    strikePrice: "₹4,737",
-    tagline: "Advanced preventative wellness package for women",
-    parameters: "73 Tests Included",
+    id: "executive",
+    icon: Star,
+    title: "Executive Health Package",
+    description: "Comprehensive medical screening tailored for working professionals & busy lifestyles.",
+    originalPrice: 3800,
+    price: 2499,
+    tests: "70+",
+    badge: "Most Popular",
+    badgeColor: "green",
     popular: true,
-    badgeText: "Best Value",
-    color: "var(--primary-green)",
     features: [
-      "Complete Blood Count (CBC)",
-      "Fasting Blood Sugar & HbA1c",
-      "Liver & Kidney Function Tests",
-      "Lipid & Thyroid Profiles",
-      "Vitamin D & ESR Tests",
-      "Rheumatoid Factor Profile",
-      "Complete Urine Analysis",
+      "All Basic Package Tests",
+      "Complete Liver Function (LFT)",
+      "Thyroid Profile (T3, T4, TSH)",
+      "HbA1c (3-month Average Glucose)",
+      "Uric Acid & Serum Calcium",
+      "Vitamin D3 & Vitamin B12",
+      "Iron Studies Profile",
     ],
   },
   {
-    title: "Heart Health Plus",
-    price: "₹3,600",
-    strikePrice: "₹4,327",
-    tagline: "Targeted cardiovascular & lipid diagnostic checkup",
-    parameters: "41 Tests Included",
-    popular: false,
-    badgeText: "Popular",
-    color: "var(--primary-blue)",
+    id: "premium",
+    icon: Crown,
+    title: "Premium Health Package",
+    description: "Ultra-comprehensive gold-standard full body checkup — the complete picture of your health.",
+    originalPrice: 5200,
+    price: 3499,
+    tests: "95+",
+    badge: "Best Value",
+    badgeColor: "gold",
     features: [
-      "Complete Blood Count (CBC)",
-      "Fasting Blood Sugar & HbA1c",
-      "Full Lipid Profile",
-      "Kidney & Liver Function Checks",
-      "Estimated GFR (eGFR)",
-      "hs-CRP & Cardiac Risk Markers",
-      "TSH (Thyroid Function)",
+      "All Executive Package Tests",
+      "Complete Iron Deficiency Profile",
+      "Serum Electrolytes (Na, K, Cl)",
+      "Cardiac Risk Markers (hs-CRP)",
+      "Rheumatoid Factor Profile",
+      "Testosterone / Hormone Panel",
+      "Complete Urine Microscopy",
     ],
   },
 ];
 
-export default function HealthPackages() {
-  const handleBook = (pkgName) => {
-    // Send event to auto-select this package in the booking form
-    const selectEvent = new CustomEvent("select-package", { detail: pkgName });
-    window.dispatchEvent(selectEvent);
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.15 } },
+};
 
-    // Scroll to booking form on Home page, or redirect to /book-test
+const cardVariants = {
+  hidden: { opacity: 0, y: 40, filter: "blur(8px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
+export default function HealthPackages() {
+  const handleBook = (pkgTitle) => {
+    const event = new CustomEvent("select-package", { detail: pkgTitle });
+    window.dispatchEvent(event);
     const target = document.getElementById("book-test");
     if (target) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const targetRect = target.getBoundingClientRect().top;
-      const offsetPosition = targetRect - bodyRect - offset;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
+      const y = target.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: y, behavior: "smooth" });
     } else {
       window.location.href = "/book-test";
     }
@@ -105,85 +99,135 @@ export default function HealthPackages() {
 
   return (
     <section id="packages" className={styles.section}>
-      {/* Background blobs */}
-      <div className="glow-bg" style={{ top: "10%", right: "20%", width: "400px", height: "400px", background: "rgba(92,184,42,0.06)" }} />
-      <div className="glow-bg" style={{ bottom: "10%", left: "10%", width: "450px", height: "450px", background: "rgba(52,116,197,0.06)" }} />
+      {/* Background ambience */}
+      <div className={styles.bgGlow1} />
+      <div className={styles.bgGlow2} />
 
       <div className={styles.container}>
-        {/* Header */}
-        <div className={styles.header}>
-          <span className={styles.tag}>Health Packages</span>
+        {/* Section Header */}
+        <motion.div
+          className={styles.header}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <span className={styles.tag}>Featured Packages</span>
           <h2 className={styles.title}>
-            Preventative <span className={styles.gradientText}>Checkup Packages</span>
+            Choose Your{" "}
+            <span className={styles.gradientText}>Health Package</span>
           </h2>
-          <p className={styles.sub}>
-            Early detection saves lives. Choose one of our health packages tailored for your specific lifestyle.
+          <p className={styles.subtitle}>
+            Preventative care packages crafted for every stage of life.
+            All tests performed with hospital-grade precision at our Arachalur lab.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Pricing Layout */}
-        <div className={styles.pricingGrid}>
-          {homePackages.map((pkg) => (
-            <motion.div
-              key={pkg.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, type: "spring", stiffness: 85 }}
-              whileHover={{ y: -8, transition: { duration: 0.2 } }}
-              className={`${styles.card} ${pkg.popular ? styles.popularCard : ""} glass-panel`}
-            >
-              {/* Badge Ribbons */}
-              <div className={`${styles.popularBadge} ${pkg.popular ? styles.badgeGreen : styles.badgeBlue}`}>
-                <Flame size={12} className={styles.badgeIcon} />
-                <span>{pkg.badgeText}</span>
-              </div>
+        {/* Package Cards */}
+        <motion.div
+          className={styles.grid}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+        >
+          {featuredPackages.map((pkg) => {
+            const Icon = pkg.icon;
+            const savePercent = Math.round(
+              ((pkg.originalPrice - pkg.price) / pkg.originalPrice) * 100
+            );
 
-              <div className={styles.cardHeader}>
-                <h3 className={styles.pkgTitle}>{pkg.title}</h3>
-                <p className={styles.pkgTagline}>{pkg.tagline}</p>
-                <div className={styles.priceSection}>
-                  {pkg.strikePrice && (
-                    <span className={styles.strikePrice}>{pkg.strikePrice}</span>
-                  )}
-                  <div className={styles.priceContainer}>
-                    <span className={styles.currency}>₹</span>
-                    <span className={styles.price}>{pkg.price.replace("₹", "")}</span>
-                    <span className={styles.duration}>/ All-Inclusive</span>
+            return (
+              <motion.div
+                key={pkg.id}
+                variants={cardVariants}
+                whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                className={`${styles.card} ${pkg.popular ? styles.popularCard : ""}`}
+              >
+                {/* Gradient border glow */}
+                <div className={`${styles.cardGlow} ${styles[`cardGlow_${pkg.badgeColor}`]}`} />
+
+                {/* Badge ribbon */}
+                <div className={`${styles.badge} ${styles[`badge_${pkg.badgeColor}`]}`}>
+                  <span>{pkg.badge}</span>
+                </div>
+
+                {/* Card top */}
+                <div className={styles.cardTop}>
+                  <div className={`${styles.iconWrap} ${styles[`iconWrap_${pkg.badgeColor}`]}`}>
+                    <Icon size={20} />
+                  </div>
+
+                  <h3 className={styles.pkgTitle}>{pkg.title}</h3>
+                  <p className={styles.pkgDesc}>{pkg.description}</p>
+
+                  {/* Pricing */}
+                  <div className={styles.priceBlock}>
+                    <div className={styles.priceRow}>
+                      <span className={styles.originalPrice}>
+                        ₹{pkg.originalPrice.toLocaleString("en-IN")}
+                      </span>
+                      <span className={styles.saveBadge}>Save {savePercent}%</span>
+                    </div>
+                    <div className={styles.currentPrice}>
+                      <span className={styles.rupee}>₹</span>
+                      <span className={styles.amount}>
+                        {pkg.price.toLocaleString("en-IN")}
+                      </span>
+                      <span className={styles.inclusive}>/ All-Inclusive</span>
+                    </div>
+                  </div>
+
+                  {/* Tests count pill */}
+                  <div className={styles.testsPill}>
+                    <Check size={12} />
+                    <span>{pkg.tests} Tests Included</span>
                   </div>
                 </div>
-                <div className={styles.parametersBadge} style={{ borderColor: pkg.popular ? "var(--primary-green)" : "var(--border-light)" }}>
-                  <Award size={14} style={{ color: pkg.popular ? "var(--primary-green)" : "var(--primary-blue)" }} />
-                  <span>{pkg.parameters}</span>
-                </div>
-              </div>
 
-              <div className={styles.cardBody}>
-                <h4 className={styles.featureTitle}>Included Tests:</h4>
-                <ul className={styles.featuresList}>
-                  {pkg.features.map((feature, i) => (
+                {/* Divider */}
+                <div className={styles.divider} />
+
+                {/* Features */}
+                <ul className={styles.features}>
+                  {pkg.features.map((f, i) => (
                     <li key={i} className={styles.featureItem}>
-                      <div className={`${styles.checkWrapper} ${pkg.popular ? styles.checkPopular : ""}`}>
-                        <Check size={14} />
-                      </div>
-                      <span className={styles.featureText}>{feature}</span>
+                      <span className={`${styles.checkIcon} ${pkg.popular ? styles.checkIconGreen : ""}`}>
+                        <Check size={11} strokeWidth={3} />
+                      </span>
+                      <span>{f}</span>
                     </li>
                   ))}
                 </ul>
-              </div>
 
-              <div className={styles.cardFooter}>
+                {/* CTA */}
                 <button
                   onClick={() => handleBook(pkg.title)}
-                  className={`${styles.bookButton} ${pkg.popular ? styles.popularButton : ""}`}
+                  className={`${styles.bookBtn} ${pkg.popular ? styles.bookBtnPrimary : styles.bookBtnSecondary}`}
                 >
-                  <Heart size={16} />
                   <span>Book Package</span>
+                  <ArrowRight size={16} />
                 </button>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+
+        {/* Footer CTA */}
+        <motion.div
+          className={styles.footerCta}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          <p className={styles.footerCtaText}>
+            Looking for women's health, cardiac, or specialty profiles?
+          </p>
+          <Link href="/packages" className={styles.footerCtaLink}>
+            View All Packages <ArrowRight size={16} />
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

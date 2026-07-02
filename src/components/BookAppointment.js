@@ -57,6 +57,7 @@ export default function BookAppointment() {
 
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [focusedField, setFocusedField] = useState("");
 
   // Set up listeners for package/test select events from other sections
@@ -107,6 +108,21 @@ export default function BookAppointment() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMsg("");
+
+    const emailBody = [
+      `Patient Name: ${formData.name}`,
+      `Age: ${formData.age}`,
+      `Gender: ${formData.gender}`,
+      `Phone: ${formData.phone}`,
+      `Email: ${formData.email || "N/A"}`,
+      `Address: ${formData.address}`,
+      `Selected Test: ${formData.test}`,
+      `Selected Package: ${formData.package}`,
+      `Preferred Date: ${formData.date}`,
+      `Preferred Time: ${formData.time}`,
+      `Special Notes: ${formData.notes || "None"}`,
+    ].join("\n");
 
     try {
       const response = await fetch("https://formsubmit.co/ajax/wellcaremicrolab@gmail.com", {
@@ -116,9 +132,20 @@ export default function BookAppointment() {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          ...formData,
-          _cc: "jeevaenzo@gmail.com",
-          _subject: `New Appointment Booking - ${formData.name}`,
+          _subject: `New Appointment Booking — ${formData.name}`,
+          _cc: "jeevaenzo@gmail.com,ultimatearul3@gmail.com",
+          _template: "table",
+          "Patient Name": formData.name,
+          "Age": formData.age,
+          "Gender": formData.gender,
+          "Phone": formData.phone,
+          "Email": formData.email || "N/A",
+          "Address": formData.address,
+          "Selected Test": formData.test,
+          "Selected Package": formData.package,
+          "Preferred Date": formData.date,
+          "Preferred Time": formData.time,
+          "Special Notes": formData.notes || "None",
         }),
       });
 
@@ -133,19 +160,7 @@ export default function BookAppointment() {
           colors: ["#5cb82a", "#3474c5", "#ffffff"],
         });
 
-        const whatsappMessage = `*Wellcare Micro Lab - Appointment Booking*
-----------------------------------------
-*Patient Name:* ${formData.name}
-*Age / Gender:* ${formData.age} yrs / ${formData.gender}
-*Phone:* ${formData.phone}
-*Email:* ${formData.email || "N/A"}
-*Address:* ${formData.address}
-*Selected Test:* ${formData.test}
-*Selected Package:* ${formData.package}
-*Date / Time:* ${formData.date} at ${formData.time}
-*Special Notes:* ${formData.notes || "None"}
-----------------------------------------
-_Please confirm my appointment. Thank you!_`;
+        const whatsappMessage = `*Wellcare Micro Lab — New Appointment*\n----------------------------------------\n*Patient:* ${formData.name}\n*Age / Gender:* ${formData.age} yrs / ${formData.gender}\n*Phone:* ${formData.phone}\n*Email:* ${formData.email || "N/A"}\n*Address:* ${formData.address}\n*Test:* ${formData.test}\n*Package:* ${formData.package}\n*Date / Time:* ${formData.date} at ${formData.time}\n*Notes:* ${formData.notes || "None"}\n----------------------------------------\n_Please confirm this appointment. Thank you!_`;
 
         setTimeout(() => {
           window.open(
@@ -154,12 +169,13 @@ _Please confirm my appointment. Thank you!_`;
           );
         }, 1500);
       } else {
-        alert("Something went wrong. Please try again or call us directly.");
+        const data = await response.json().catch(() => ({}));
+        setErrorMsg(data.message || "Submission failed. Please try again or call us directly at 96774 37151.");
         setLoading(false);
       }
     } catch (err) {
       console.error("Submission error:", err);
-      alert("Network error. Please try again.");
+      setErrorMsg("Network error. Please check your connection and try again, or call 96774 37151.");
       setLoading(false);
     }
   };
@@ -184,7 +200,7 @@ _Please confirm my appointment. Thank you!_`;
               Schedule Your <span className={styles.gradientText}>Lab Test</span>
             </h2>
             <p className={styles.desc}>
-              Fill out our secure booking form. Your request is emailed to our clinical coordinators and copy-forwarded to our management team instantly.
+              Fill out our secure booking form. Your request is instantly emailed to our clinical team at <strong>wellcaremicrolab@gmail.com</strong> — confirmation is sent within minutes.
             </p>
 
             <div className={styles.benefitList}>
@@ -475,6 +491,13 @@ _Please confirm my appointment. Thank you!_`;
                     </>
                   )}
                 </button>
+
+                {/* Inline error message */}
+                {errorMsg && (
+                  <div className={styles.errorMsg}>
+                    <span>⚠️ {errorMsg}</span>
+                  </div>
+                )}
               </form>
             )}
           </motion.div>
