@@ -6,7 +6,7 @@ import styles from "./ContactMap.module.css";
 
 export default function ContactMap() {
   const mapEmbedUrl =
-    "https://maps.app.goo.gl/MWfDRmio67LeZ9t39";
+    "https://maps.google.com/maps?q=11.159071246149862,77.70040957180305&t=&z=16&ie=UTF8&iwloc=&output=embed";
 
   return (
     <section id="contact" className={styles.section}>
