@@ -131,7 +131,7 @@ export default function ContactMap() {
                   <p className={styles.bannerSub}>Kangeyam Road Branch</p>
                 </div>
                 <a
-                  href="https://maps.app.goo.gl/CApxxwjXXjXNKfcP6"
+                  href="https://maps.app.goo.gl/MWfDRmio67LeZ9t39"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.directionsBtn}
