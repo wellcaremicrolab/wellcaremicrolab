@@ -110,7 +110,8 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <ClientWrapper>{children}</ClientWrapper>
+         <ClientWrapper>{children}</ClientWrapper>
+         <GoogleAnalytics gaId="G-FB3N6FNPGK" />
       </body>
     </html>
   );
