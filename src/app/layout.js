@@ -1,6 +1,7 @@
 import { Inter, Outfit } from "next/font/google";
 import ClientWrapper from "@/components/ClientWrapper";
 import "./globals.css";
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const inter = Inter({
   subsets: ["latin"],
